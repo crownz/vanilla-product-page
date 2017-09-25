@@ -11,7 +11,8 @@
  			<div class="header">
  				<img class="header-logo" src="https://upload.wikimedia.org/wikipedia/lt/archive/4/4c/20130327114953%21Nfq-logo.png">
  				<div class="header-basket">
- 					<img class="basket-img" src="https://cdn3.iconfinder.com/data/icons/black-easy/512/538666-shop_512x512.png">
+ 					<img class="basket-img" src="https://cdn3.iconfinder.com/data/icons/black-easy/512/538666-shop_512x512.png" onclick="openBasket(event)">
+ 					<div class="basket-content" onclick="event.stopPropagation()"></div>
  				</div>
  			</div>
  			<div class="product">
@@ -31,10 +32,11 @@
  					</div>
  					<div class="footer">
  						<div class="price">
-
+ 							<div class="old">$139.99</div>
+ 							<div class="new">$99.99</div>
  						</div>
- 						<div class="product-basket">
-
+ 						<div class="product-basket" onclick="addItemToBasket(landscapeItem)">
+ 							<img class="product-basket-img" src="https://cdn3.iconfinder.com/data/icons/black-easy/512/538666-shop_512x512.png">
  						</div>
  					</div>
  				</div>
@@ -50,6 +52,18 @@
 			'http://www.wallpaper77.com/upload/DesktopWallpapers/cache/The-Dock-landscape-beach-800x600.jpg'
 		];
 
+		const basketItems = [];
+
+		const landscapeItem = {
+			id: 1,
+			price: 99.99,
+			name: 'Landscape'
+		}
+
+		document.addEventListener('click', e => {
+			const basket = document.querySelector('.basket-content');
+			basket.style.visibility = 'hidden';
+		});
 
 		function initSlider() {
 			const slider = document.querySelector('.image-slider');
@@ -102,6 +116,43 @@
 		function updateSlider(right = true) {
 			activeImage = right ? activeImage + 1 : activeImage - 1;
 			updateStyles();
+		}
+
+		function openBasket(e) {
+			e.stopPropagation();
+			const basket = document.querySelector('.basket-content');
+			updateBasketContent(basket);
+			basket.style.visibility = 'visible';
+		}
+
+		function addItemToBasket(item) {
+			const exists = basketItems.find(i => i.id === item.id);
+			if (exists) {
+				exists.quantity++;
+			} else {
+				basketItems.push(Object.assign({}, item, { quantity: 1 }));
+			}
+		}
+
+		function updateBasketContent(el) {
+			while(el.firstChild) {
+				el.removeChild(el.firstChild);
+			}
+
+			if (!basketItems.length) {
+				const node = document.createElement('DIV');
+				node.setAttribute('class', 'basket-item');
+				node.innerHTML = 'Basket is empty';
+				el.appendChild(node);
+			} else {
+				basketItems.forEach(item => {
+					const node = document.createElement('DIV');
+					node.setAttribute('class', 'basket-item');
+					const content = `x${item.quantity} ${item.name}, $${item.price * item.quantity}`;
+					node.innerHTML = content;
+					el.appendChild(node);
+				});
+			}
 		}
 
 		initSlider();
