@@ -14,13 +14,86 @@
  					<img class="basket-img" src="https://cdn3.iconfinder.com/data/icons/black-easy/512/538666-shop_512x512.png">
  				</div>
  			</div>
-			swx4all
+ 			<div class="product">
+ 				<div class="slider-container">
+ 					<div class="image-slider">
+
+ 					</div>
+ 					<div class="slide slide-left" onclick="updateSlider(false)"><</div>
+ 					<div class="slide slide-right" onclick="updateSlider()">></div> 
+ 				</div>
+ 				
+ 				<div class="details">
+ 					<div class="title">
+
+ 					</div>
+ 					<div class="description">
+
+ 					</div>
+ 					<div class="footer">
+ 						<div class="price">
+
+ 						</div>
+ 						<div class="product-basket">
+
+ 						</div>
+ 					</div>
+ 				</div>
+ 			</div>
 		</div>
 	</div>
 	<script>
-		(function() {
-			console.log("WOPWOP!");
-		})()
+		let activeImage = 0;
+
+		const images = [
+			'http://wallpaper.pickywallpapers.com/800x600/purple-space-landscape.jpg',
+			'http://tharunaya.us/mx0125/wallpaper/image_wallpaper/59996656655_Exquisite-Landscape.gif',
+			'http://www.wallpaper77.com/upload/DesktopWallpapers/cache/The-Dock-landscape-beach-800x600.jpg'
+		];
+
+
+		function initSlider() {
+			const container = document.querySelector('.image-slider');
+
+			images.forEach((img, idx) => {
+				const node = document.createElement("IMG");
+				node.setAttribute('src', img);
+				node.setAttribute('class', 'image');
+				const left = (activeImage - idx) * 400;
+				const style = `left: ${left}px`;
+				node.setAttribute('style', style);
+
+				container.appendChild(node);
+			});
+
+			updateSliders();
+		}
+
+		function updateStyles() {
+			const container = document.querySelector('.image-slider');
+			const children = [...container.children];
+			children.forEach((child, idx) => {
+				const left = (activeImage - idx) * 400;
+				const style = `left: ${left}px`;
+				child.setAttribute('style', style);
+			});
+
+			updateSliders();
+		}
+
+		function updateSliders() {
+			const slideLeft = document.querySelector('.slide-left');
+			const slideRight = document.querySelector('.slide-right');
+			slideLeft.style.visibility = activeImage === 0 ? 'hidden' : 'visible';
+			slideRight.style.visibility = activeImage === images.length - 1 ? 'hidden' : 'visible';
+		}
+
+		function updateSlider(right = true) {
+			activeImage = right ? activeImage + 1 : activeImage - 1;
+			updateStyles();
+		}
+
+		initSlider();
 	</script>
 </body>
 </html>
