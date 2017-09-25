@@ -16,19 +16,18 @@
  			</div>
  			<div class="product">
  				<div class="slider-container">
- 					<div class="image-slider">
-
- 					</div>
+ 					<div class="image-slider"></div>
+ 					<div class="image-thumbnails"></div>
  					<div class="slide slide-left" onclick="updateSlider(false)"><</div>
  					<div class="slide slide-right" onclick="updateSlider()">></div> 
  				</div>
- 				
  				<div class="details">
  					<div class="title">
-
+ 						Landscape
  					</div>
  					<div class="description">
-
+ 						A landscape is the visible features of an area of land, its landforms and how they integrate with natural or man-made features.
+ 						A landscape includes the physical elements of geophysically defined landforms such as (ice-capped) mountains, hills, water bodies such as rivers, lakes, ponds and the sea, living elements of land cover including indigenous vegetation, human elements including different forms of land use, buildings and structures, and transitory elements such as lighting and weather conditions.
  					</div>
  					<div class="footer">
  						<div class="price">
@@ -53,17 +52,25 @@
 
 
 		function initSlider() {
-			const container = document.querySelector('.image-slider');
+			const slider = document.querySelector('.image-slider');
+			const thumbnails = document.querySelector('.image-thumbnails');
 
 			images.forEach((img, idx) => {
-				const node = document.createElement("IMG");
-				node.setAttribute('src', img);
-				node.setAttribute('class', 'image');
-				const left = (activeImage - idx) * 400;
-				const style = `left: ${left}px`;
-				node.setAttribute('style', style);
+				const image = document.createElement("IMG");
+				image.setAttribute('src', img);
+				image.setAttribute('class', 'image');
+				applyImageStyle(image, idx);
 
-				container.appendChild(node);
+				const thumb = document.createElement("IMG");
+				thumb.setAttribute('src', img);
+				thumb.setAttribute('class', 'thumb');
+				thumb.addEventListener('click', () => {
+					activeImage = idx;
+					updateStyles();
+				});
+
+				slider.appendChild(image);
+				thumbnails.appendChild(thumb);
 			});
 
 			updateSliders();
@@ -73,12 +80,16 @@
 			const container = document.querySelector('.image-slider');
 			const children = [...container.children];
 			children.forEach((child, idx) => {
-				const left = (activeImage - idx) * 400;
-				const style = `left: ${left}px`;
-				child.setAttribute('style', style);
+				applyImageStyle(child, idx);
 			});
 
 			updateSliders();
+		}
+
+		function applyImageStyle(img, idx) {
+			const left = (activeImage - idx) * -400;
+			const style = `left: ${left}px`;
+			img.setAttribute('style', style);
 		}
 
 		function updateSliders() {
